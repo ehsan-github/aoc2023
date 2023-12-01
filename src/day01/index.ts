@@ -1,15 +1,8 @@
 import run from "aocrunner";
 import * as R from "ramda";
-import {
-  readFile,
-  p,
-  pn,
-  trace,
-} from "../utils/index.js";
+import { readFile, p, pn, trace } from "../utils/index.js";
 
-const inputt = readFile(
-  "src/day01/input.txt",
-) as string;
+const inputt = readFile("src/day01/input.txt") as string;
 
 const test1 = `1abc2
 pqr3stu8vwx
@@ -60,27 +53,29 @@ const part1: SolutionT = R.pipe(
 const part2: SolutionT = R.pipe(
   p,
   R.map(
-    R.applySpec({
-      a: (z) =>
-        R.match(
-          /[0-9]|zero|one|two|three|four|five|six|seven|eight|nine/g,
-          z,
-        )[0],
-      b: R.pipe(
-        R.reverse,
-        (z) =>
+    R.pipe(
+      R.applySpec({
+        a: (z) =>
           R.match(
-            /[0-9]|eno|owt|eerht|ruof|evif|xis|neves|thgie|enin|orez/g,
+            /[0-9]|zero|one|two|three|four|five|six|seven|eight|nine/g,
             z,
           )[0],
-      ),
-    }),
+        b: R.pipe(
+          R.reverse,
+          (z) =>
+            R.match(
+              /[0-9]|eno|owt|eerht|ruof|evif|xis|neves|thgie|enin|orez/g,
+              z,
+            )[0],
+          R.reverse,
+        ),
+      }),
+      R.juxt([R.prop("a"), R.prop("b")]),
+      R.map((x) => R.propOr(x, x, findNumber)),
+      R.join(""),
+      Number,
+    ),
   ),
-  R.map(R.evolve({ b: R.reverse })),
-  R.map(R.juxt([R.prop("a"), R.prop("b")])),
-  R.map(R.map((x) => R.propOr(x, x, findNumber))),
-  R.map(R.join("")),
-  R.map(Number),
   R.sum,
 );
 
