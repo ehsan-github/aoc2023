@@ -36,13 +36,13 @@ const part1: SolutionT = R.pipe(
     R.pipe(
       R.split(""),
       R.applySpec({
-        a: R.find((x) => Number(x) == +x),
+        a: R.find((x: any) => Number(x) == +x),
         b: R.pipe(
-          R.reverse,
-          R.find((x) => Number(x) == +x),
+          R.reverse as any,
+          R.find((x: any) => Number(x) == +x),
         ),
       }),
-      R.juxt([R.prop("a"), R.prop("b")]),
+      R.juxt([R.prop("a"), R.prop("b")]) as any,
       R.apply(R.concat),
       Number,
     ),
