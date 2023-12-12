@@ -4,7 +4,7 @@ import { readFile, p, pn, trace } from "../utils/index.js";
 
 const testInput = ``;
 
-const input = readFile("src/day00/input.txt");
+const input = readFile("src/day00/input.txt")!;
 
 type SolutionT = (input: string) => any;
 const part1: SolutionT = R.pipe(p);
