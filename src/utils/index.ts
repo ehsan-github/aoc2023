@@ -29,3 +29,10 @@ export const trace = (label: string) => (x: unknown) => {
   console.log(label, x);
   return x;
 };
+
+export const convertList = (xs: string[]): string[] =>
+  R.pipe(
+    R.splitAt(1),
+    ([[firstPar], rest]) => R.reduce(R.zip, firstPar, rest),
+    R.map(R.pipe(R.flatten, R.join(""))),
+  )(xs);

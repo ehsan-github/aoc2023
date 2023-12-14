@@ -1,6 +1,12 @@
 import run from "aocrunner";
 import * as R from "ramda";
-import { readFile, p, pn, trace } from "../utils/index.js";
+import {
+  readFile,
+  p,
+  pn,
+  trace,
+  convertList,
+} from "../utils/index.js";
 
 const testInput = `
 #.##..##.
@@ -42,12 +48,6 @@ const getVerticalMirror = (xs: string[]) => {
   }
   return possibleVerticals;
 };
-const convertList = (xs: string[]) =>
-  R.pipe(
-    R.splitAt(1),
-    ([[firstPar], rest]) => R.reduce(R.zip, firstPar, rest),
-    R.map(R.pipe(R.flatten, R.join(""))),
-  )(xs);
 
 const compute = (xs: string[]) => {
   const verticalMirror = getVerticalMirror(xs);
