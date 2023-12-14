@@ -16,7 +16,9 @@ export function readFile(filePath: string) {
     const data = fs.readFileSync(filePath);
     return data.toString();
   } catch (error: any) {
-    console.error(`Got an error trying to read the file: ${error.message}`);
+    console.error(
+      `Got an error trying to read the file: ${error.message}`,
+    );
   }
 }
 
@@ -36,3 +38,20 @@ export const convertList = (xs: string[]): string[] =>
     ([[firstPar], rest]) => R.reduce(R.zip, firstPar, rest),
     R.map(R.pipe(R.flatten, R.join(""))),
   )(xs);
+
+export const splitByChar = (char: string) => (x: string) =>
+  x.split("").reduce((acc, item) => {
+    const last = acc[acc.length - 1];
+    if (item === char) {
+      if (last && last[0] === char)
+        return R.adjust(
+          acc.length - 1,
+          R.append(item),
+          acc,
+        );
+      return R.append([item], acc);
+    }
+    if (last && last[0] !== char)
+      return R.adjust(acc.length - 1, R.append(item), acc);
+    return R.append([item], acc);
+  }, []);
