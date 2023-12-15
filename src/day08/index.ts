@@ -113,13 +113,21 @@ const part2: SolutionT = R.pipe(
       const currDir = obj.pattern.charAt(
         obj.steps % obj.pattern.length,
       );
-      return R.evolve({
-        steps: R.inc,
-        curr: R.map(
-          (c) =>
-            R.prop(c, obj.mappings)[Number(currDir == "R")],
+      return {
+        ...obj,
+        steps: obj.steps + 1,
+        curr: Array.from(
+          new Set(
+            R.map(
+              (c) =>
+                R.prop(c, obj.mappings)[
+                  Number(currDir == "R")
+                ],
+              obj.curr,
+            ),
+          ),
         ),
-      })(obj);
+      };
     },
   ),
   R.prop("steps"),
