@@ -30,32 +30,86 @@ const orderMap: Record<chars, number> = {
 };
 
 type SolutionT = (input: string) => any;
-const collectRocks = R.pipe(
-  splitByChar("#"),
-  R.map(R.sortBy(R.prop(R.__, orderMap))),
-  R.flatten,
-  R.join(""),
-);
-const part1: SolutionT = R.pipe(
-  p,
-  convertList,
-  R.map(collectRocks),
-  convertList,
-  R.reverse,
+const collectRocks = (r: boolean) =>
+  R.pipe(
+    splitByChar("#"),
+    R.map(
+      R.pipe(
+        R.sortBy(R.prop(R.__, orderMap)),
+        R.when(R.always(r), R.reverse),
+      ),
+    ),
+    R.flatten,
+    R.join(""),
+  );
+const computeRest = R.pipe(
   (xs) =>
     xs.map((x, i) => R.count(R.equals("O"), x) * (i + 1)),
   R.sum,
 );
+const part1: SolutionT = R.pipe(
+  p,
+  convertList,
+  R.map(collectRocks(false)),
+  convertList,
+  R.reverse,
+  computeRest,
+);
 
-const part2: SolutionT = R.pipe(p);
+const roundMap = {
+  north: R.pipe(
+    convertList,
+    R.map(collectRocks(false)),
+    convertList,
+  ),
+  west: R.map(collectRocks(false)),
+  south: R.pipe(
+    convertList,
+    R.map(collectRocks(true)),
+    convertList,
+  ),
+  east: R.map(collectRocks(true)),
+};
+const oneRound = R.pipe(
+  convertList,
+  R.map(collectRocks(false)),
+  convertList,
+  R.map(collectRocks(false)),
+  convertList,
+  R.map(collectRocks(true)),
+  convertList,
+  R.map(collectRocks(true)),
+);
+const REPEAT = 1_000_000_000;
+const part2: SolutionT = R.pipe(
+  p,
+  R.applySpec({
+    t: R.always(0),
+    v: R.identity,
+    col: R.always([]),
+  }),
+  R.until(
+    R.whereAny({
+      t: R.equals(590 + (REPEAT % 59)),
+    }),
+    (r) =>
+      R.evolve({
+        t: R.inc,
+        v: oneRound,
+      })(r),
+  ),
+  R.prop("v"),
+  R.reverse,
+  computeRest,
+);
 
 run({
   part1: {
     tests: [
-      {
-        input: testInput,
-        expected: 136,
-      },
+      // {
+      //   input: testInput,
+      //   expected: 136,
+      // },
       // {
       //   input,
       //   expected: 0,
@@ -67,12 +121,12 @@ run({
     tests: [
       // {
       //   input: testInput,
-      //   expected: 0,
+      //   expected: 64,
       // },
-      // {
-      //   input,
-      //   expected: 0,
-      // },
+      {
+        input,
+        expected: 103445,
+      },
     ],
     solution: part2,
   },
