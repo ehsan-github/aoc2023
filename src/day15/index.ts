@@ -24,16 +24,64 @@ const part1: SolutionT = R.pipe(
   R.map(computeHash),
   R.sum,
 );
+const addNew = (
+  { label, value }: { label: string; value: number },
+  oldValue: { label: string; value: number }[],
+) => {
+  if (R.any((x) => x.label === label, oldValue)) {
+    return oldValue.map((x) =>
+      x.label === label ? { label, value } : x,
+    );
+  }
+  return R.append({ label, value }, oldValue);
+};
 
-const part2: SolutionT = R.pipe(p);
+const part2: SolutionT = R.pipe(
+  p,
+  R.head,
+  R.split(","),
+  R.reduce((acc, item) => {
+    if (item.includes("=")) {
+      const [label, v] = item.split("=");
+      const hash = computeHash(label);
+      let oldValue = acc[hash] ?? [];
+      return {
+        ...acc,
+        [hash]: addNew(
+          { label, value: Number(v) },
+          oldValue,
+        ),
+      };
+    }
+    const label = item.replace("-", "");
+    const hash = computeHash(label);
+    let oldValue = acc[hash];
+    if (oldValue) {
+      return {
+        ...acc,
+        [hash]: oldValue.filter((x) => x.label !== label),
+      };
+    }
+
+    return acc;
+  }, {}),
+  R.toPairs,
+  R.map(([hash, values]) =>
+    values.map(({ value }, idx) =>
+      R.product([R.inc(Number(hash)), value, R.inc(idx)]),
+    ),
+  ),
+  R.flatten,
+  R.sum,
+);
 
 run({
   part1: {
     tests: [
-      {
-        input: testInput,
-        expected: 1320,
-      },
+      // {
+      //   input: testInput,
+      //   expected: 1320,
+      // },
       // {
       //   input,
       //   expected: 0,
@@ -43,10 +91,10 @@ run({
   },
   part2: {
     tests: [
-      // {
-      //   input: testInput,
-      //   expected: 0,
-      // },
+      {
+        input: testInput,
+        expected: 145,
+      },
       // {
       //   input,
       //   expected: 0,
