@@ -151,10 +151,12 @@
         "time": null
       },
       "part2": {
-        "solved": false,
-        "result": "14513",
-        "attempts": [],
-        "time": 846.955458
+        "solved": true,
+        "result": "443",
+        "attempts": [
+          "59"
+        ],
+        "time": 6579.2555
       }
     },
     {
