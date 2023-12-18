@@ -1,12 +1,17 @@
 import run from "aocrunner";
 import * as R from "ramda";
-import { readFile, p, pn, trace } from "../utils/index.js";
-
-const testInput = ``;
+import {
+  readFile,
+  p,
+  pn,
+  trace,
+  SolutionT,
+} from "../utils/index.js";
 
 const input = readFile("src/day00/input.txt")!;
 
-type SolutionT = (input: string) => any;
+const testInput = ``;
+
 const part1: SolutionT = R.pipe(p);
 
 const part2: SolutionT = R.pipe(p);

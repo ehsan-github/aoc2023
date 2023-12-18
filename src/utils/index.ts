@@ -1,5 +1,6 @@
 import fs from "fs";
 import * as R from "ramda";
+export type SolutionT = (input: string) => number;
 /**
  * Root for your util libraries.
  *
