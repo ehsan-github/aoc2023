@@ -150,14 +150,10 @@ const computeNextStep =
               });
               range[prop] = [num, maxProp];
             }
-          } else {
-            continue;
           }
         } else {
-          // should be > than num
-          if (maxProp < num) {
-            continue;
-          } else {
+          // Not isLess
+          if (maxProp >= num) {
             if (minProp > num) {
               acc.push({ ...range, v: nextFn });
             } else {
