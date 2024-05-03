@@ -35,14 +35,10 @@ const part1: SolutionT = R.pipe(
   R.map(
     R.pipe(
       R.split(""),
-      R.applySpec({
-        a: R.find((x: any) => Number(x) == +x),
-        b: R.pipe(
-          R.reverse as any,
-          R.find((x: any) => Number(x) == +x),
-        ),
-      }),
-      R.juxt([R.prop("a"), R.prop("b")]) as any,
+      R.juxt([
+        R.find((x: any) => Number(x) == +x),
+        R.findLast((x: any) => Number(x) == +x),
+      ]) as any,
       R.apply(R.concat),
       Number,
     ),
